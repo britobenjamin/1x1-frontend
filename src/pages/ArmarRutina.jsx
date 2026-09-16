@@ -21,6 +21,7 @@ function ArmarRutina() {
 
   const [libreria, setLibreria] = useState([]);
   const [mostrarExito, setMostrarExito] = useState(false);
+  const [errorValidacion, setErrorValidacion] = useState("");
 
   useEffect(() => {
     setLibreria(getEjercicios());
@@ -48,6 +49,7 @@ function ArmarRutina() {
   const cambiarAlumno = () => {
     setAlumno(null);
     setBusqueda("");
+    setErrorValidacion("");
   };
 
   const irADia = (index) => {
@@ -74,6 +76,7 @@ function ArmarRutina() {
   };
 
   const actualizarCampo = (instanciaId, campo, valor) => {
+    setErrorValidacion("");
     setEjerciciosPorDia((prev) => {
       const ejercicios = (prev[diaActivo] || []).map((ej) =>
         ej.instanciaId === instanciaId ? { ...ej, [campo]: valor } : ej
@@ -95,7 +98,28 @@ function ArmarRutina() {
     setEjerciciosPorDia((prev) => ({ ...prev, [diaActivo]: nuevosEjercicios }));
   };
 
+  const encontrarDiaIncompleto = () => {
+    for (let d = 0; d < cantidadDias; d++) {
+      const incompleto = (ejerciciosPorDia[d] || []).some(
+        (ej) => !ej.peso || !ej.series || !ej.repeticiones
+      );
+      if (incompleto) return d;
+    }
+    return null;
+  };
+
   const guardarRutina = () => {
+    const diaIncompleto = encontrarDiaIncompleto();
+    if (diaIncompleto !== null) {
+      setDiaActivo(diaIncompleto);
+      setErrorValidacion(
+        `Completá el peso, las series y las repeticiones de todos los ejercicios antes de guardar (Día ${
+          diaIncompleto + 1
+        }).`
+      );
+      return;
+    }
+    setErrorValidacion("");
     if (alumno) {
       const diasGuardados = Array.from(
         { length: cantidadDias },
@@ -218,6 +242,10 @@ function ArmarRutina() {
         >
           Guardar rutina
         </button>
+
+        {errorValidacion && (
+          <p className="armar-rutina__error">{errorValidacion}</p>
+        )}
       </main>
 
       <ConfirmModal
