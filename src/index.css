@@ -1,0 +1,65 @@
+:root {
+  --color-orange: #fa4b0a;
+  --color-orange-dark: #c93d08;
+  --color-bg: #0d0d0d;
+  --color-surface: #1c1c1c;
+  --color-surface-alt: #232323;
+  --color-border: #8c8c86;
+  --color-text: #f2f2f0;
+  --color-text-muted: #8c8c86;
+  --color-navbar-bg: #333333;
+  --color-success: #3fa34d;
+  --color-warning: #ffc107;
+  --color-danger: #e63946;
+
+  --font-title: "Anton", sans-serif;
+  --font-ui: "Oswald", sans-serif;
+  --font-body: "Inter", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  min-height: 100vh;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+input {
+  font-family: inherit;
+}
+
+button {
+  font-family: var(--font-ui);
+  cursor: pointer;
+}
+
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: radial-gradient(
+    circle at 50% 0%,
+    var(--color-surface) 0%,
+    var(--color-bg) 60%
+  );
+}
+
+@media (min-width: 1024px) {
+  body {
+    zoom: 1.2;
+  }
+}
