@@ -386,6 +386,7 @@ function VerRutina() {
         confirmLabel="Quitar tilde"
         cancelLabel="Cancelar"
         confirmVariant="danger"
+        mostrarCerrar
         onConfirm={confirmarQuitarTilde}
         onCancel={() => setInstanciaAQuitar(null)}
       />
@@ -397,6 +398,7 @@ function VerRutina() {
         confirmLabel="Quitar tilde"
         cancelLabel="Cancelar"
         confirmVariant="danger"
+        mostrarCerrar
         onConfirm={confirmarQuitarDiaCompletado}
         onCancel={() => setConfirmarQuitarDia(false)}
       />

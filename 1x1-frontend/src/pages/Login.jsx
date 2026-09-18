@@ -52,9 +52,12 @@ function IconoFlecha() {
   );
 }
 
-function LoginCard({ role, icono, onSubmit, error, cargando }) {
+function LoginCard({ role, icono, onSubmit, error, cargando, linkSumate }) {
   return (
-    <form className="login-card" onSubmit={onSubmit}>
+    <form
+      className={`login-card login-card--${role.toLowerCase()}`}
+      onSubmit={onSubmit}
+    >
       <div className="login-card__encabezado">
         <span className="login-card__icono">{icono}</span>
         <span className="login-card__separador" aria-hidden="true" />
@@ -95,6 +98,16 @@ function LoginCard({ role, icono, onSubmit, error, cargando }) {
           autoComplete="new-password"
         />
       </div>
+
+      {linkSumate && (
+        <p className="login-card__sumate">
+          Si no tenés cuenta, sumate a nuestra aplicación (
+          <a href={linkSumate} target="_blank" rel="noopener noreferrer">
+            tocá aquí para sumarte
+          </a>
+          )
+        </p>
+      )}
 
       {error && <p className="login-card__error">{error}</p>}
 
@@ -173,6 +186,7 @@ function Login() {
           onSubmit={handleEntrenadorSubmit}
           error={errorEntrenador}
           cargando={cargandoEntrenador}
+          linkSumate="https://wa.me/5493815376191?text=Hola%20Benjamin%2C%20quiero%20sumarme%20como%20Entrenador%20a%20tu%20aplicaci%C3%B3n"
         />
         <LoginCard
           role="Alumno"

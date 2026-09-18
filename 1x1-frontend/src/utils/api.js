@@ -32,6 +32,12 @@ export const loginAlumno = (dni, password) =>
     body: JSON.stringify({ dni, password }),
   });
 
+// Entrenadores
+export const getEntrenador = (id) => request(`/entrenadores/${id}`);
+
+export const actualizarEntrenador = (id, data) =>
+  request(`/entrenadores/${id}`, { method: "PUT", body: JSON.stringify(data) });
+
 // Alumnos
 export const getAlumnos = (entrenadorId) =>
   request(`/alumnos?entrenadorId=${entrenadorId}`);
@@ -54,6 +60,15 @@ export const agregarPeso = (alumnoId, peso) =>
   request(`/alumnos/${alumnoId}/pesos`, {
     method: "POST",
     body: JSON.stringify({ peso }),
+  });
+
+export const getHistorialPagos = (alumnoId) =>
+  request(`/alumnos/${alumnoId}/pagos`);
+
+export const registrarPago = (alumnoId, { meses, fechaVencimiento }) =>
+  request(`/alumnos/${alumnoId}/pagos`, {
+    method: "POST",
+    body: JSON.stringify({ meses, fechaVencimiento }),
   });
 
 // Ejercicios (librería del entrenador)

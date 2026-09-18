@@ -45,7 +45,7 @@ function diasParaCreate(dias = []) {
       create: (dia.ejercicios || []).map((ej, ejIndex) => ({
         ejercicioId: Number(ej.ejercicioId),
         orden: ej.orden ?? ejIndex,
-        peso: ej.peso != null && ej.peso !== "" ? Number(ej.peso) : null,
+        peso: ej.peso != null && ej.peso !== "" ? String(ej.peso).trim() : null,
         repeticiones:
           ej.repeticiones != null && ej.repeticiones !== ""
             ? Number(ej.repeticiones)
@@ -134,7 +134,7 @@ router.put("/semanas/:semanaId", async (req, res) => {
         const data = {
           ejercicioId: Number(ej.ejercicioId),
           orden: j,
-          peso: ej.peso != null && ej.peso !== "" ? Number(ej.peso) : null,
+          peso: ej.peso != null && ej.peso !== "" ? String(ej.peso).trim() : null,
           repeticiones:
             ej.repeticiones != null && ej.repeticiones !== ""
               ? Number(ej.repeticiones)
@@ -199,7 +199,9 @@ router.patch("/rutina-ejercicios/:id", async (req, res) => {
 
   const data = {
     ...(completado !== undefined && { completado: !!completado }),
-    ...(peso !== undefined && { peso: peso != null ? Number(peso) : null }),
+    ...(peso !== undefined && {
+      peso: peso != null && peso !== "" ? String(peso).trim() : null,
+    }),
     ...(repeticiones !== undefined && {
       repeticiones: repeticiones != null ? Number(repeticiones) : null,
     }),

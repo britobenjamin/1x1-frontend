@@ -239,6 +239,25 @@
   text-align: center;
 }
 
+.login-card__sumate {
+  margin: 0 0 16px;
+  color: var(--color-text-muted);
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.login-card__sumate a {
+  color: var(--color-orange);
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.login-card__sumate a:hover {
+  color: var(--color-orange-dark);
+}
+
 .login-card__submit {
   margin-top: 8px;
   display: flex;
@@ -275,5 +294,13 @@
   .login-card {
     width: 100%;
     max-width: 360px;
+  }
+
+  .login-card--alumno {
+    order: 1;
+  }
+
+  .login-card--entrenador {
+    order: 2;
   }
 }

@@ -297,6 +297,7 @@ function ListaEjercicios() {
         }
         confirmLabel="Eliminar"
         cancelLabel="Cancelar"
+        mostrarCerrar
         onConfirm={confirmarEliminar}
         onCancel={() => setEjercicioAEliminar(null)}
       />

@@ -1,0 +1,64 @@
+.administracion__label {
+  display: block;
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin: 0 0 10px;
+}
+
+.administracion__meses {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.administracion__mes {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background-color: var(--color-surface-alt);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.15s ease, background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.administracion__mes:hover {
+  border-color: var(--color-orange);
+}
+
+.administracion__mes--activo {
+  background-color: var(--color-orange);
+  border-color: var(--color-orange);
+  color: #fff;
+}
+
+.administracion__ayuda {
+  margin: 8px 0 20px;
+  color: var(--color-text-muted);
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.administracion__guardar {
+  width: 100%;
+  border: none;
+  cursor: pointer;
+}
+
+.administracion__guardar:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

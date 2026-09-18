@@ -209,6 +209,15 @@ function ListaAlumnos() {
             aria-modal="true"
             onClick={(e) => e.stopPropagation()}
           >
+            <button
+              type="button"
+              className="modal__cerrar-x"
+              onClick={cerrarModalAlumno}
+              aria-label="Cerrar"
+            >
+              ×
+            </button>
+
             <h2 className="modal__title">
               {alumnoSeleccionado.nombre} {alumnoSeleccionado.apellido}
             </h2>
@@ -241,6 +250,10 @@ function ListaAlumnos() {
                     ? "Recién empieza"
                     : `Ya entrena (${alumnoSeleccionado.frecuencia}x por semana)`}
                 </span>
+              </div>
+              <div className="alumno-detalle__fila">
+                <span>Lesiones</span>
+                <span>{alumnoSeleccionado.lesiones || "-"}</span>
               </div>
               <div className="alumno-detalle__fila">
                 <span>Estado de pago</span>
@@ -363,6 +376,7 @@ function ListaAlumnos() {
         }
         confirmLabel="Eliminar"
         cancelLabel="Cancelar"
+        mostrarCerrar
         onConfirm={confirmarEliminarAlumno}
         onCancel={() => setAlumnoAEliminar(null)}
       />

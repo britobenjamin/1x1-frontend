@@ -12,6 +12,7 @@ function DiaEjerciciosEditor({
   onEliminar,
   onReordenar,
   progreso,
+  historialAnterior,
 }) {
   const [busquedaEjercicio, setBusquedaEjercicio] = useState("");
   const [dragIndex, setDragIndex] = useState(null);
@@ -116,6 +117,9 @@ function DiaEjerciciosEditor({
         {ejercicios.map((ej, index) => {
           const thumb = getYoutubeThumbnail(ej.video);
           const hecho = progreso ? !!progreso[ej.instanciaId] : null;
+          const realizadoAnterior = historialAnterior
+            ? historialAnterior[ej.instanciaId]
+            : undefined;
           return (
             <div
               key={ej.instanciaId}
@@ -169,15 +173,34 @@ function DiaEjerciciosEditor({
                 </svg>
               </button>
 
-              {thumb && (
-                <a
-                  href={ej.video}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="ejercicio-card__thumb"
-                >
-                  <img src={thumb} alt={`Miniatura de ${ej.nombre}`} />
-                </a>
+              {(thumb || realizadoAnterior !== undefined) && (
+                <div className="ejercicio-card__miniatura">
+                  {thumb && (
+                    <a
+                      href={ej.video}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="ejercicio-card__thumb"
+                    >
+                      <img src={thumb} alt={`Miniatura de ${ej.nombre}`} />
+                    </a>
+                  )}
+
+                  {realizadoAnterior !== undefined && (
+                    <span
+                      className={
+                        "ejercicio-card__cartel-anterior" +
+                        (realizadoAnterior
+                          ? " ejercicio-card__cartel-anterior--si"
+                          : " ejercicio-card__cartel-anterior--no")
+                      }
+                    >
+                      {realizadoAnterior
+                        ? "El alumno sí realizó este ejercicio la última vez"
+                        : "El alumno no realizó este ejercicio la última vez"}
+                    </span>
+                  )}
+                </div>
               )}
 
               <div className="ejercicio-card__campos">
@@ -190,8 +213,9 @@ function DiaEjerciciosEditor({
                   <div className="ejercicio-card__field">
                     <label>Peso (kg)</label>
                     <input
-                      type="number"
-                      min="0"
+                      type="text"
+                      inputMode="decimal"
+                      placeholder="Ej: 20 o peso corporal"
                       className="dia-editor__input"
                       value={ej.peso}
                       onChange={(e) =>
@@ -337,6 +361,7 @@ function DiaEjerciciosEditor({
         confirmLabel="Eliminar"
         cancelLabel="Cancelar"
         confirmVariant="danger"
+        mostrarCerrar
         onConfirm={confirmarEliminar}
         onCancel={() => setInstanciaAEliminar(null)}
       />

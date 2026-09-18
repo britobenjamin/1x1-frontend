@@ -10,13 +10,39 @@
 }
 
 .confirm-modal {
+  position: relative;
   width: 100%;
   max-width: 380px;
+  max-height: 85vh;
+  overflow-y: auto;
   background-color: var(--color-surface);
   border: 1px solid rgba(140, 140, 134, 0.25);
   border-radius: 16px;
   padding: 28px;
   box-shadow: 0 24px 48px rgba(0, 0, 0, 0.5);
+}
+
+.confirm-modal__cerrar-x {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: var(--color-orange);
+  font-size: 1.3rem;
+  line-height: 1;
+  border-radius: 50%;
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.confirm-modal__cerrar-x:hover {
+  color: var(--color-orange-dark);
+  background-color: var(--color-surface-alt);
 }
 
 .confirm-modal__title {
@@ -39,6 +65,37 @@
   display: flex;
   justify-content: flex-end;
   gap: 12px;
+}
+
+.confirm-modal__semanas-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.confirm-modal__semana-numero {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background-color: var(--color-surface-alt);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.15s ease, background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.confirm-modal__semana-numero:hover {
+  border-color: var(--color-orange);
+  background-color: var(--color-orange);
+  color: #fff;
 }
 
 .confirm-modal__cancel {

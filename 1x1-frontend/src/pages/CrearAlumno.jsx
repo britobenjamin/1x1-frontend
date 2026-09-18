@@ -18,6 +18,8 @@ function CrearAlumno() {
   const [alumnoAEditar, setAlumnoAEditar] = useState(null);
   const [cargando, setCargando] = useState(modoEdicion);
   const [experiencia, setExperiencia] = useState("");
+  const [sexo, setSexo] = useState("");
+  const [modificarPassword, setModificarPassword] = useState(!modoEdicion);
   const [mostrarExito, setMostrarExito] = useState(false);
   const [error, setError] = useState("");
   const [guardando, setGuardando] = useState(false);
@@ -27,6 +29,7 @@ function CrearAlumno() {
       getAlumno(idEditar).then((a) => {
         setAlumnoAEditar(a);
         setExperiencia(a.experiencia);
+        setSexo(a.sexo || "");
         setCargando(false);
       });
     }
@@ -39,6 +42,10 @@ function CrearAlumno() {
 
     if (form.dni?.trim() !== form.confirmarDni?.trim()) {
       setError("Los DNI ingresados no coinciden.");
+      return;
+    }
+    if (form.mail?.trim() !== form.confirmarMail?.trim()) {
+      setError("Los mails ingresados no coinciden.");
       return;
     }
     if (form.telefono?.trim() !== form.confirmarTelefono?.trim()) {
@@ -55,11 +62,14 @@ function CrearAlumno() {
     const data = {
       nombre: form.nombre?.trim(),
       apellido: form.apellido?.trim(),
+      mail: form.mail?.trim(),
       telefono: form.telefono?.trim(),
+      sexo: form.sexo || null,
       edad: form.edad || null,
       peso: form.peso || null,
       experiencia: form.experiencia,
       frecuencia: form.experiencia === "entrenando" ? form.frecuencia : null,
+      lesiones: form.lesiones?.trim() || null,
       dni: form.dni?.trim(),
     };
     if (form.password) data.password = form.password;
@@ -156,6 +166,38 @@ function CrearAlumno() {
 
           <div className="form-card__row">
             <div className="form-card__field">
+              <label className="form-card__label" htmlFor="mail">
+                Mail
+              </label>
+              <input
+                id="mail"
+                name="mail"
+                type="email"
+                className="form-card__input"
+                defaultValue={alumnoAEditar?.mail}
+                autoComplete="off"
+                required
+              />
+            </div>
+
+            <div className="form-card__field">
+              <label className="form-card__label" htmlFor="confirmarMail">
+                Repetir mail
+              </label>
+              <input
+                id="confirmarMail"
+                name="confirmarMail"
+                type="email"
+                className="form-card__input"
+                defaultValue={alumnoAEditar?.mail}
+                autoComplete="off"
+                required
+              />
+            </div>
+          </div>
+
+          <div className="form-card__row">
+            <div className="form-card__field">
               <label className="form-card__label" htmlFor="telefono">
                 Teléfono
               </label>
@@ -187,6 +229,32 @@ function CrearAlumno() {
                 autoComplete="off"
                 required
               />
+            </div>
+          </div>
+
+          <div className="form-card__section">
+            <span className="form-card__label">Sexo</span>
+            <div className="form-card__options">
+              <label className="form-card__option">
+                <input
+                  type="radio"
+                  name="sexo"
+                  value="masculino"
+                  checked={sexo === "masculino"}
+                  onChange={() => setSexo("masculino")}
+                />
+                Masculino
+              </label>
+              <label className="form-card__option">
+                <input
+                  type="radio"
+                  name="sexo"
+                  value="femenino"
+                  checked={sexo === "femenino"}
+                  onChange={() => setSexo("femenino")}
+                />
+                Femenino
+              </label>
             </div>
           </div>
 
@@ -235,6 +303,19 @@ function CrearAlumno() {
             </div>
           )}
 
+          <div className="form-card__field">
+            <label className="form-card__label" htmlFor="lesiones">
+              Lesiones
+            </label>
+            <textarea
+              id="lesiones"
+              name="lesiones"
+              className="form-card__input form-card__textarea"
+              placeholder="Ej: molestia en el hombro derecho, evitar press militar..."
+              defaultValue={alumnoAEditar?.lesiones}
+            />
+          </div>
+
           <p className="form-card__note">Con estos datos iniciará sesión</p>
 
           <div className="form-card__row">
@@ -281,9 +362,12 @@ function CrearAlumno() {
                 name="password"
                 type="password"
                 className="form-card__input"
-                placeholder={modoEdicion ? "Dejar en blanco para no cambiarla" : ""}
+                placeholder={
+                  modoEdicion && !modificarPassword ? "••••••••" : ""
+                }
                 autoComplete="new-password"
-                required={!modoEdicion}
+                disabled={modoEdicion && !modificarPassword}
+                required={!modoEdicion || modificarPassword}
               />
             </div>
 
@@ -296,12 +380,25 @@ function CrearAlumno() {
                 name="confirmarPassword"
                 type="password"
                 className="form-card__input"
-                placeholder={modoEdicion ? "Dejar en blanco para no cambiarla" : ""}
+                placeholder={
+                  modoEdicion && !modificarPassword ? "••••••••" : ""
+                }
                 autoComplete="new-password"
-                required={!modoEdicion}
+                disabled={modoEdicion && !modificarPassword}
+                required={!modoEdicion || modificarPassword}
               />
             </div>
           </div>
+
+          {modoEdicion && !modificarPassword && (
+            <button
+              type="button"
+              className="form-card__link-btn form-card__link-btn--centrado"
+              onClick={() => setModificarPassword(true)}
+            >
+              Modificar contraseña
+            </button>
+          )}
 
           {error && <p className="form-card__error">{error}</p>}
 
@@ -322,6 +419,7 @@ function CrearAlumno() {
         cancelLabel="Volver al listado"
         confirmVariant="primary"
         hideCancel={!modoEdicion}
+        mostrarCerrar={modoEdicion}
         onConfirm={() =>
           modoEdicion ? setMostrarExito(false) : navigate("/entrenador")
         }

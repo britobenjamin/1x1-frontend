@@ -3,7 +3,12 @@ import { Link, useNavigate } from "react-router-dom";
 import NavbarWide from "../components/NavbarWide.jsx";
 import ConfirmModal from "../components/ConfirmModal.jsx";
 import DiaEjerciciosEditor from "../components/DiaEjerciciosEditor.jsx";
-import { getEjercicios, getAlumnos, crearSemana } from "../utils/api.js";
+import {
+  getEjercicios,
+  getAlumnos,
+  getRutinaHistorial,
+  crearSemana,
+} from "../utils/api.js";
 import { getSesion } from "../utils/sesion.js";
 import "./ArmarRutina.css";
 
@@ -17,6 +22,7 @@ function ArmarRutina() {
   const [alumno, setAlumno] = useState(null);
   const [alumnos, setAlumnos] = useState([]);
   const [cantidadDiasInput, setCantidadDiasInput] = useState("");
+  const [rutinaExistente, setRutinaExistente] = useState(false);
   const [diaActivo, setDiaActivo] = useState(0);
   const [ejerciciosPorDia, setEjerciciosPorDia] = useState({});
 
@@ -46,15 +52,20 @@ function ArmarRutina() {
   );
   const dias = Array.from({ length: cantidadDias }, (_, i) => i);
 
-  const seleccionarAlumno = (a) => {
+  const seleccionarAlumno = async (a) => {
     setAlumno(a);
     setBusqueda(`${a.nombre} ${a.apellido}`);
+    const historial = await getRutinaHistorial(a.id);
+    const tieneRutina = historial.length > 0;
+    setRutinaExistente(tieneRutina);
+    if (tieneRutina) setCantidadDiasInput("");
   };
 
   const cambiarAlumno = () => {
     setAlumno(null);
     setBusqueda("");
     setErrorValidacion("");
+    setRutinaExistente(false);
   };
 
   const irADia = (index) => {
@@ -205,58 +216,84 @@ function ArmarRutina() {
         </section>
 
         <section className="armar-rutina__section">
-          <label className="armar-rutina__label" htmlFor="cantidad-dias">
-            ¿Cuántos días quiere agregar a la rutina?
+          {alumno && rutinaExistente && (
+            <div className="armar-rutina__aviso-rutina">
+              <p className="armar-rutina__aviso-rutina__texto">
+                Este alumno ya cuenta con una rutina
+              </p>
+              <Link
+                to="/entrenador/modificar-rutina"
+                className="armar-rutina__aviso-rutina__boton"
+              >
+                Ir a modificar rutina
+              </Link>
+            </div>
+          )}
+
+          <label className="armar-rutina__label">
+            ¿En la semana, cuantos dias entrenará?
           </label>
-          <input
-            id="cantidad-dias"
-            type="number"
-            min="1"
-            max={MAX_DIAS}
-            placeholder="Ej: 3"
-            className="armar-rutina__input armar-rutina__input--corto"
-            value={cantidadDiasInput}
-            onChange={(e) => {
-              setCantidadDiasInput(e.target.value);
-              setDiaActivo(0);
-            }}
-          />
+          <div className="armar-rutina__opciones-dias">
+            {Array.from({ length: MAX_DIAS }, (_, i) => i + 1).map((n) => (
+              <button
+                key={n}
+                type="button"
+                className={
+                  "armar-rutina__opcion-dia" +
+                  (Number(cantidadDiasInput) === n
+                    ? " armar-rutina__opcion-dia--activo"
+                    : "")
+                }
+                disabled={rutinaExistente}
+                onClick={() => {
+                  setCantidadDiasInput(String(n));
+                  setDiaActivo(0);
+                }}
+              >
+                {n} {n === 1 ? "día" : "días"}
+              </button>
+            ))}
+          </div>
         </section>
 
-        {cantidadDias > 0 && (
-          <section className="armar-rutina__section">
-            <div className="armar-rutina__tabs">
-              {dias.map((d) => (
-                <button
-                  key={d}
-                  type="button"
-                  className={
-                    "armar-rutina__tab" +
-                    (d === diaActivo ? " armar-rutina__tab--activo" : "")
-                  }
-                  onClick={() => irADia(d)}
-                >
-                  Día {d + 1}
-                </button>
-              ))}
-            </div>
+        {!rutinaExistente && cantidadDias > 0 && (
+          <>
+            <hr className="armar-rutina__separador" />
+            <p className="armar-rutina__subtitulo">Agrega los ejercicios</p>
+            <section className="armar-rutina__section">
+              <div className="armar-rutina__tabs">
+                {dias.map((d) => (
+                  <button
+                    key={d}
+                    type="button"
+                    className={
+                      "armar-rutina__tab" +
+                      (d === diaActivo ? " armar-rutina__tab--activo" : "")
+                    }
+                    onClick={() => irADia(d)}
+                  >
+                    Día {d + 1}
+                  </button>
+                ))}
+              </div>
 
-            <DiaEjerciciosEditor
-              ejercicios={ejerciciosDelDiaActivo}
-              libreria={libreria}
-              onAgregar={agregarEjercicioAlDia}
-              onActualizarCampo={actualizarCampo}
-              onEliminar={eliminarEjercicio}
-              onReordenar={reordenarEjercicios}
-            />
-          </section>
+              <DiaEjerciciosEditor
+                ejercicios={ejerciciosDelDiaActivo}
+                libreria={libreria}
+                onAgregar={agregarEjercicioAlDia}
+                onActualizarCampo={actualizarCampo}
+                onEliminar={eliminarEjercicio}
+                onReordenar={reordenarEjercicios}
+              />
+            </section>
+          </>
         )}
 
         <button
           type="button"
           className="armar-rutina__guardar"
           onClick={guardarRutina}
-          disabled={guardando}
+          disabled={guardando || rutinaExistente}
         >
           {guardando ? "Guardando..." : "Guardar rutina"}
         </button>

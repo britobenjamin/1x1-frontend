@@ -89,6 +89,23 @@ function ModificarRutina() {
     ejerciciosDelDiaActivo.map((ej) => [ej.instanciaId, !!ej.completado])
   );
 
+  // Compara contra el mismo día de la semana anterior (por ejercicioId) para
+  // que el entrenador vea si el alumno lo realizó la última vez, incluso
+  // después de recargar la página (no depende de un flag copiado a mano).
+  const diaAnteriorObj = semanas[semanaActiva - 1]?.dias[diaActivo];
+  const historialAnteriorEjercicios = diaAnteriorObj
+    ? Object.fromEntries(
+        ejerciciosDelDiaActivo
+          .map((ej) => {
+            const anterior = diaAnteriorObj.ejercicios.find(
+              (e) => e.ejercicioId === ej.ejercicioId
+            );
+            return anterior ? [ej.instanciaId, !!anterior.completado] : null;
+          })
+          .filter(Boolean)
+      )
+    : {};
+
   const actualizarDiasDeSemanaActiva = (actualizar) => {
     setSemanas((prev) => {
       const copia = prev.map((s) => ({ ...s, dias: [...s.dias] }));
@@ -181,8 +198,8 @@ function ModificarRutina() {
     );
   };
 
-  const crearSemanaCopiando = () => {
-    const semanaBase = semanas[semanas.length - 1];
+  const crearSemanaCopiando = (indiceSemanaBase) => {
+    const semanaBase = semanas[indiceSemanaBase];
     const diasCopiados = semanaBase.dias.map((dia) => ({
       ejercicios: dia.ejercicios.map((ej) => ({
         ...ej,
@@ -382,6 +399,7 @@ function ModificarRutina() {
                   onEliminar={eliminarEjercicio}
                   onReordenar={reordenarEjercicios}
                   progreso={progresoEjercicios}
+                  historialAnterior={historialAnteriorEjercicios}
                 />
 
                 <button
@@ -443,12 +461,32 @@ function ModificarRutina() {
             aria-modal="true"
             onClick={(e) => e.stopPropagation()}
           >
+            <button
+              type="button"
+              className="confirm-modal__cerrar-x"
+              onClick={() => setMostrarCopiarModal(false)}
+              aria-label="Cerrar"
+            >
+              ×
+            </button>
+
             <h2 className="confirm-modal__title">Nueva semana</h2>
             <p className="confirm-modal__message">
-              ¿Querés copiar los ejercicios de la Semana {semanas.length} a la
-              Semana {semanas.length + 1}? Vas a poder modificar el peso de
-              cada uno después.
+              Elegí qué semana querés copiar
             </p>
+            <div className="confirm-modal__semanas-grid">
+              {semanas.map((_, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  className="confirm-modal__semana-numero"
+                  onClick={() => crearSemanaCopiando(i)}
+                  title={`Copiar de Semana ${i + 1}`}
+                >
+                  {i + 1}
+                </button>
+              ))}
+            </div>
             <div className="confirm-modal__actions">
               <button
                 type="button"
@@ -459,17 +497,10 @@ function ModificarRutina() {
               </button>
               <button
                 type="button"
-                className="confirm-modal__cancel"
+                className="confirm-modal__confirm confirm-modal__confirm--primary"
                 onClick={crearSemanaVacia}
               >
                 Empezar vacía
-              </button>
-              <button
-                type="button"
-                className="confirm-modal__confirm confirm-modal__confirm--primary"
-                onClick={crearSemanaCopiando}
-              >
-                Copiar ejercicios
               </button>
             </div>
           </div>
@@ -485,6 +516,7 @@ function ModificarRutina() {
         confirmLabel="Eliminar"
         cancelLabel="Cancelar"
         confirmVariant="danger"
+        mostrarCerrar
         onConfirm={confirmarEliminarSemanaActiva}
         onCancel={() => setConfirmarEliminarSemana(false)}
       />

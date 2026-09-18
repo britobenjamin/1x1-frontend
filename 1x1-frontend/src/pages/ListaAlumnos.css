@@ -169,13 +169,39 @@
 }
 
 .modal__card {
+  position: relative;
   width: 100%;
   max-width: 400px;
+  max-height: 85vh;
+  overflow-y: auto;
   background-color: var(--color-surface);
   border: 1px solid rgba(140, 140, 134, 0.25);
   border-radius: 16px;
   padding: 28px;
   box-shadow: 0 24px 48px rgba(0, 0, 0, 0.5);
+}
+
+.modal__cerrar-x {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: var(--color-orange);
+  font-size: 1.3rem;
+  line-height: 1;
+  border-radius: 50%;
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.modal__cerrar-x:hover {
+  color: var(--color-orange-dark);
+  background-color: var(--color-surface-alt);
 }
 
 .modal__title {

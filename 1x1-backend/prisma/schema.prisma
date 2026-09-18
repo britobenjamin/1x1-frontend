@@ -24,12 +24,21 @@ enum EstadoPago {
   vencido
 }
 
+enum Sexo {
+  masculino
+  femenino
+}
+
 model Entrenador {
-  id           Int      @id @default(autoincrement())
-  nombre       String
-  dni          String   @unique
-  passwordHash String
-  createdAt    DateTime @default(now())
+  id              Int       @id @default(autoincrement())
+  nombre          String
+  apellido        String?
+  dni             String    @unique
+  mail            String?
+  telefono        String?
+  fechaNacimiento DateTime? @db.Date
+  passwordHash    String
+  createdAt       DateTime  @default(now())
 
   alumnos   Alumno[]
   ejercicios Ejercicio[]
@@ -43,13 +52,17 @@ model Alumno {
   apellido         String
   dni              String      @unique
   passwordHash     String
+  mail             String?
   telefono         String?
+  sexo             Sexo?
   edad             Int?
   peso             Float?
   fechaInscripcion DateTime    @default(now())
   experiencia      Experiencia
   frecuencia       Int?
+  lesiones         String?     @db.Text
   estadoPago       EstadoPago  @default(pendiente)
+  fechaVencimiento DateTime?   @db.Date
   createdAt        DateTime    @default(now())
 
   // Columna calculada por MySQL (id - nombre - apellido) solo para identificar rápido
@@ -58,6 +71,7 @@ model Alumno {
 
   semanas       Semana[]
   historialPeso RegistroPeso[]
+  pagos         Pago[]
 }
 
 // Historial de peso corporal del alumno a lo largo del tiempo
@@ -67,6 +81,28 @@ model RegistroPeso {
   alumnoId Int
   peso     Float
   fecha    DateTime @default(now())
+
+  // Copia del nombre/apellido del alumno (mantenida por trigger) solo para
+  // identificarlo rápido al mirar la tabla desde Workbench. No la escribe la app.
+  alumnoNombre   String? @db.VarChar(191)
+  alumnoApellido String? @db.VarChar(191)
+}
+
+// Historial de pagos de cuota del alumno: se guarda una fila cada vez que el
+// entrenador registra un pago desde Administración (nunca se pisa ni se borra).
+model Pago {
+  id                       Int      @id @default(autoincrement())
+  alumno                   Alumno   @relation(fields: [alumnoId], references: [id], onDelete: Cascade)
+  alumnoId                 Int
+  meses                    Int?
+  fechaVencimientoAnterior DateTime? @db.Date
+  fechaVencimientoNueva    DateTime  @db.Date
+  fecha                    DateTime @default(now())
+
+  // Copia del nombre/apellido del alumno (mantenida por trigger) solo para
+  // identificarlo rápido al mirar la tabla desde Workbench. No la escribe la app.
+  alumnoNombre   String? @db.VarChar(191)
+  alumnoApellido String? @db.VarChar(191)
 }
 
 // Ejercicios de la librería del entrenador (nombre + link de video)
@@ -89,6 +125,11 @@ model Semana {
   numero    Int
   createdAt DateTime @default(now())
 
+  // Copia del nombre/apellido del alumno (mantenida por trigger) solo para
+  // identificarlo rápido al mirar la tabla desde Workbench. No la escribe la app.
+  alumnoNombre   String? @db.VarChar(191)
+  alumnoApellido String? @db.VarChar(191)
+
   dias Dia[]
 
   @@unique([alumnoId, numero])
@@ -100,6 +141,11 @@ model Dia {
   semanaId   Int
   numero     Int
   completado Boolean  @default(false)
+
+  // Copia del nombre/apellido del alumno dueño de la semana (mantenida por
+  // trigger) solo para identificarlo rápido desde Workbench. No la escribe la app.
+  alumnoNombre   String? @db.VarChar(191)
+  alumnoApellido String? @db.VarChar(191)
 
   ejercicios RutinaEjercicio[]
 
@@ -114,7 +160,7 @@ model RutinaEjercicio {
   ejercicio    Ejercicio @relation(fields: [ejercicioId], references: [id])
   ejercicioId  Int
   orden        Int
-  peso         Float?
+  peso         String?
   repeticiones Int?
   series       Int?
   completado   Boolean   @default(false)
@@ -123,4 +169,11 @@ model RutinaEjercicio {
   recomendacion    String? @db.Text
   // Comentario que deja el alumno en respuesta, para que lo lea el entrenador
   comentarioAlumno String? @db.Text
+
+  // Copia del nombre/apellido del alumno (vía el día) y del nombre del
+  // entrenador dueño del ejercicio (mantenida por trigger) solo para
+  // identificarlos rápido al mirar la tabla desde Workbench. No la escribe la app.
+  alumnoNombre     String? @db.VarChar(191)
+  alumnoApellido   String? @db.VarChar(191)
+  entrenadorNombre String? @db.VarChar(191)
 }

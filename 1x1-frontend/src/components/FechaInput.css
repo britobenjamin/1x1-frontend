@@ -1,0 +1,25 @@
+.fecha-input {
+  display: flex;
+  gap: 8px;
+}
+
+.fecha-input .fecha-input__campo {
+  width: auto;
+  margin-bottom: 0;
+}
+
+.fecha-input .fecha-input__campo--dia {
+  flex: 0 0 64px;
+  text-align: center;
+}
+
+.fecha-input .fecha-input__campo--mes {
+  flex: 1 1 auto;
+  min-width: 0;
+  cursor: pointer;
+}
+
+.fecha-input .fecha-input__campo--anio {
+  flex: 0 0 88px;
+  text-align: center;
+}

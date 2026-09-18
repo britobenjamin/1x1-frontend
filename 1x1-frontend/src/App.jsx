@@ -1,6 +1,8 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login.jsx";
 import Entrenador from "./pages/Entrenador.jsx";
+import InformacionPersonalEntrenador from "./pages/InformacionPersonalEntrenador.jsx";
+import Administracion from "./pages/Administracion.jsx";
 import CrearAlumno from "./pages/CrearAlumno.jsx";
 import ArmarRutina from "./pages/ArmarRutina.jsx";
 import ListaEjercicios from "./pages/ListaEjercicios.jsx";
@@ -17,6 +19,11 @@ function App() {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/entrenador" element={<Entrenador />} />
+        <Route
+          path="/entrenador/informacion-personal"
+          element={<InformacionPersonalEntrenador />}
+        />
+        <Route path="/entrenador/administracion" element={<Administracion />} />
         <Route path="/entrenador/crear-alumno" element={<CrearAlumno />} />
         <Route path="/entrenador/armar-rutina" element={<ArmarRutina />} />
         <Route path="/entrenador/lista-ejercicios" element={<ListaEjercicios />} />

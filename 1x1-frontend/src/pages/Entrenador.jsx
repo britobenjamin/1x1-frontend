@@ -4,6 +4,8 @@ import { getSesion, limpiarSesion } from "../utils/sesion.js";
 import "./Entrenador.css";
 
 const OPCIONES = [
+  { label: "Información personal", path: "/entrenador/informacion-personal" },
+  { label: "Administración", path: "/entrenador/administracion" },
   { label: "Crear alumno", path: "/entrenador/crear-alumno" },
   { label: "Ver listado de alumnos", path: "/entrenador/lista-alumnos" },
   { label: "Lista de ejercicios", path: "/entrenador/lista-ejercicios" },

@@ -10,6 +10,7 @@ function ConfirmModal({
   onConfirm,
   onCancel,
   hideCancel = false,
+  mostrarCerrar = false,
 }) {
   if (!open) return null;
 
@@ -21,6 +22,16 @@ function ConfirmModal({
         aria-modal="true"
         onClick={(e) => e.stopPropagation()}
       >
+        {mostrarCerrar && (
+          <button
+            type="button"
+            className="confirm-modal__cerrar-x"
+            onClick={onCancel}
+            aria-label="Cerrar"
+          >
+            ×
+          </button>
+        )}
         <h2 className="confirm-modal__title">{title}</h2>
         {message && <p className="confirm-modal__message">{message}</p>}
 

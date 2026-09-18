@@ -383,8 +383,14 @@
   font-size: 0.8rem;
 }
 
-.ejercicio-card__thumb {
+.ejercicio-card__miniatura {
   flex: 0 0 160px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ejercicio-card__thumb {
   display: block;
   border-radius: 8px;
   overflow: hidden;
@@ -397,15 +403,48 @@
   height: auto;
 }
 
+.ejercicio-card__cartel-anterior {
+  display: block;
+  border-radius: 6px;
+  padding: 6px 8px;
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: 0.7rem;
+  line-height: 1.3;
+  text-align: center;
+}
+
+.ejercicio-card__cartel-anterior--si {
+  background-color: rgba(63, 163, 77, 0.15);
+  border: 1px solid var(--color-success);
+  color: var(--color-success);
+}
+
+.ejercicio-card__cartel-anterior--no {
+  background-color: rgba(230, 57, 70, 0.15);
+  border: 1px solid var(--color-danger);
+  color: var(--color-danger);
+}
+
 @media (max-width: 620px) {
   .ejercicio-card {
     flex-direction: column;
     padding: 20px 16px 20px 32px;
   }
 
-  .ejercicio-card__thumb {
+  .ejercicio-card__miniatura {
     flex-basis: auto;
-    width: 130px;
+    flex-direction: row;
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .ejercicio-card__thumb {
+    flex: 0 0 130px;
+  }
+
+  .ejercicio-card__cartel-anterior {
+    flex: 1 1 auto;
   }
 
   .ejercicio-card__campos {

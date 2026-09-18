@@ -143,6 +143,98 @@
   color: var(--color-orange-dark);
 }
 
+.armar-rutina__separador {
+  width: 100%;
+  max-width: 640px;
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: 0 0 28px;
+}
+
+.armar-rutina__subtitulo {
+  width: 100%;
+  max-width: 640px;
+  margin: 0 0 16px;
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.armar-rutina__opciones-dias {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.armar-rutina__opcion-dia {
+  background-color: var(--color-surface-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 10px 16px;
+  color: var(--color-text);
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: 0.85rem;
+  letter-spacing: 0.03em;
+  transition: border-color 0.15s ease, background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.armar-rutina__opcion-dia:hover:not(:disabled) {
+  border-color: var(--color-orange);
+}
+
+.armar-rutina__opcion-dia--activo {
+  background-color: var(--color-orange);
+  border-color: var(--color-orange);
+  color: #fff;
+}
+
+.armar-rutina__opcion-dia:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.armar-rutina__aviso-rutina {
+  background-color: rgba(250, 75, 10, 0.12);
+  border: 1px solid var(--color-orange);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.armar-rutina__aviso-rutina__texto {
+  margin: 0 0 12px;
+  color: var(--color-orange);
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.armar-rutina__aviso-rutina__boton {
+  display: inline-block;
+  background-color: var(--color-orange);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: background-color 0.15s ease;
+}
+
+.armar-rutina__aviso-rutina__boton:hover {
+  background-color: var(--color-orange-dark);
+}
+
 .armar-rutina__tabs {
   display: flex;
   flex-wrap: wrap;
