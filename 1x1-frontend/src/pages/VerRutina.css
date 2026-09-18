@@ -1,0 +1,56 @@
+.ver-rutina__dia-listo {
+  display: block;
+  width: 100%;
+  max-width: 420px;
+  margin: 28px auto 0;
+  background-color: var(--color-success);
+  color: #0d0d0d;
+  border: none;
+  border-radius: 8px;
+  padding: 14px 24px;
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  text-align: center;
+  transition: background-color 0.15s ease, opacity 0.15s ease;
+}
+
+.ver-rutina__dia-listo:hover {
+  opacity: 0.9;
+}
+
+.ver-rutina__dia-listo--hecho {
+  background-color: transparent;
+  border: 1px solid var(--color-success);
+  color: var(--color-success);
+}
+
+.ver-rutina__celebracion {
+  margin: 20px auto 0;
+  max-width: 420px;
+  text-align: center;
+}
+
+.ver-rutina__celebracion-emojis {
+  margin: 0 0 10px;
+  font-size: 1.8rem;
+  letter-spacing: 0.15em;
+}
+
+.ver-rutina__celebracion-texto {
+  margin: 0;
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  white-space: pre-line;
+}
+
+.ver-rutina__celebracion-boton {
+  display: block;
+  width: 100%;
+  margin-top: 24px;
+  text-align: center;
+}

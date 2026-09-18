@@ -1,0 +1,126 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Experiencia {
+  nuevo
+  entrenando
+}
+
+enum EstadoPago {
+  pagado
+  pendiente
+  vencido
+}
+
+model Entrenador {
+  id           Int      @id @default(autoincrement())
+  nombre       String
+  dni          String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+
+  alumnos   Alumno[]
+  ejercicios Ejercicio[]
+}
+
+model Alumno {
+  id               Int         @id @default(autoincrement())
+  entrenador       Entrenador  @relation(fields: [entrenadorId], references: [id])
+  entrenadorId     Int
+  nombre           String
+  apellido         String
+  dni              String      @unique
+  passwordHash     String
+  telefono         String?
+  edad             Int?
+  peso             Float?
+  fechaInscripcion DateTime    @default(now())
+  experiencia      Experiencia
+  frecuencia       Int?
+  estadoPago       EstadoPago  @default(pendiente)
+  createdAt        DateTime    @default(now())
+
+  // Columna calculada por MySQL (id - nombre - apellido) solo para identificar rápido
+  // al alumno al mirar la tabla desde Workbench. No la escribe la app.
+  identificador String? @db.VarChar(255)
+
+  semanas       Semana[]
+  historialPeso RegistroPeso[]
+}
+
+// Historial de peso corporal del alumno a lo largo del tiempo
+model RegistroPeso {
+  id       Int      @id @default(autoincrement())
+  alumno   Alumno   @relation(fields: [alumnoId], references: [id], onDelete: Cascade)
+  alumnoId Int
+  peso     Float
+  fecha    DateTime @default(now())
+}
+
+// Ejercicios de la librería del entrenador (nombre + link de video)
+model Ejercicio {
+  id           Int        @id @default(autoincrement())
+  entrenador   Entrenador @relation(fields: [entrenadorId], references: [id])
+  entrenadorId Int
+  nombre       String
+  video        String
+  createdAt    DateTime   @default(now())
+
+  instancias RutinaEjercicio[]
+}
+
+// Cada semana de rutina asignada a un alumno (se conservan todas: es el historial)
+model Semana {
+  id        Int      @id @default(autoincrement())
+  alumno    Alumno   @relation(fields: [alumnoId], references: [id], onDelete: Cascade)
+  alumnoId  Int
+  numero    Int
+  createdAt DateTime @default(now())
+
+  dias Dia[]
+
+  @@unique([alumnoId, numero])
+}
+
+model Dia {
+  id         Int      @id @default(autoincrement())
+  semana     Semana   @relation(fields: [semanaId], references: [id], onDelete: Cascade)
+  semanaId   Int
+  numero     Int
+  completado Boolean  @default(false)
+
+  ejercicios RutinaEjercicio[]
+
+  @@unique([semanaId, numero])
+}
+
+// Instancia de un ejercicio dentro de un día concreto (con su peso/reps/series y si se completó)
+model RutinaEjercicio {
+  id           Int       @id @default(autoincrement())
+  dia          Dia       @relation(fields: [diaId], references: [id], onDelete: Cascade)
+  diaId        Int
+  ejercicio    Ejercicio @relation(fields: [ejercicioId], references: [id])
+  ejercicioId  Int
+  orden        Int
+  peso         Float?
+  repeticiones Int?
+  series       Int?
+  completado   Boolean   @default(false)
+
+  // Recomendación que deja el entrenador para este ejercicio puntual
+  recomendacion    String? @db.Text
+  // Comentario que deja el alumno en respuesta, para que lo lea el entrenador
+  comentarioAlumno String? @db.Text
+}

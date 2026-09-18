@@ -1,0 +1,45 @@
+.asistencia-chart__scroll {
+  overflow-x: auto;
+  padding: 4px 0 0;
+}
+
+.asistencia-chart__svg {
+  display: block;
+}
+
+.asistencia-chart__grid {
+  stroke: rgba(140, 140, 134, 0.15);
+  stroke-width: 1;
+}
+
+.asistencia-chart__eje-y,
+.asistencia-chart__eje-x {
+  font-family: var(--font-ui);
+  font-size: 8px;
+  fill: var(--color-text-muted);
+}
+
+.asistencia-chart__linea {
+  fill: none;
+  stroke: var(--color-orange);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.asistencia-chart__punto {
+  fill: var(--color-orange);
+  stroke: var(--color-surface);
+  stroke-width: 1.5;
+}
+
+.asistencia-chart__etiqueta {
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: 9px;
+  fill: var(--color-text);
+}
+
+.asistencia-chart__flecha {
+  fill: var(--color-orange);
+}
